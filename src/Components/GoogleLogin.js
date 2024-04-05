@@ -9,7 +9,7 @@ const GoogleLogin = () => {
         <h3 className="text-xl pb-4 ">Create a new account</h3>
         <Link
           to={
-            "https://hiring.reachinbox.xyz/api/v1/auth/google-login?redirect_to=https://reachinboxapp.netlify.app/home"
+            "https://hiring.reachinbox.xyz/api/v1/auth/google-login?redirect_to=https://reachinbox-umesh.netlify.app/home"
           }
         >
           <button className="py-3 px-20 flex justify-center items-center text-base rounded-md bg-gray-500 hover:bg-gray-600">
