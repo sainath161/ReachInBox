@@ -5,25 +5,56 @@ import { MdReply } from "react-icons/md";
 import { FaCaretDown } from "react-icons/fa";
 import { IoMdFlash } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteThread, getEmailList, sendReply } from "../Redux/Action";
+import { getEmailList, sendReply } from "../Redux/Action";
 import Alert from "./Alert";
 import ListComponent from "./ListComponent";
 
 const MailBox = () => {
   const token = localStorage.getItem("token");
-  console.log(token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
+
   const curThreadId = useSelector((store) => store.curThreadId);
   const curThreadData = useSelector((store) => store.curThreadData);
   const dispatch = useDispatch();
 
+  const theme = useSelector((store) => store.theme);
+  const textColor = theme === "dark" ? "text-white" : "text-[#343A40]";
+  const bgColor = theme === "dark" ? "bg-black" : "bg-[#FFFFFF]";
+  const borderClr = theme === "dark" ? "border-gray-800" : "border-[#E0E0E0]";
+
+  const [openEditor, setOpenEditor] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+
+  useEffect(() => {
+    const handleKeyR = (event) => {
+      if (event.key === "R") {
+        setOpenEditor(true);
+      }
+    };
+
+    const handleKeyD = (event) => {
+      if (event.key === "D") {
+        setOpenAlert(true);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyR);
+    document.addEventListener("keydown", handleKeyD);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyR);
+      document.removeEventListener("keydown", handleKeyD);
+    };
+  }, []);
+
   const currentDate = new Date();
   currentDate.setHours(14);
   currentDate.setMinutes(5);
+
   const [replyObj, setReplyObj] = useState({
     from: "jeanne@icloud.com",
     to: "peter@reachinbox.com",
@@ -41,41 +72,11 @@ const MailBox = () => {
     inReplyTo: "<a1383d57-fdee-60c0-d46f-6bc440409e84@gmail.com>",
   });
 
-  const theme = useSelector((store) => store.theme);
-  const textColor = theme == "dark" ? "text-white" : "text-[#343A40]";
-  const bgColor = theme == "dark" ? "bg-black" : "bg-[#FFFFFF]";
-  const borderClr = theme == "dark" ? "border-gray-800" : "border-[#E0E0E0]";
-
-  const [openEditor, setOpenEditor] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
-  // keyboard Events
-  useEffect(() => {
-    const handleKeyR = (event) => {
-      if (event.key === "R") {
-        setOpenEditor(true);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyR);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyD = (event) => {
-      if (event.key === "D") {
-        setOpenAlert(true);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyD);
-  }, []);
-
   const handleReplyBody = (e) => {
     setReplyObj((prev) => ({ ...prev, body: e.target.innerText }));
-    console.log(replyObj);
   };
 
   const handleSendReply = () => {
-    console.log(replyObj, curThreadId);
     dispatch(sendReply(curThreadId, replyObj, config))
       .then((res) => {
         dispatch(getEmailList(config));
@@ -86,10 +87,10 @@ const MailBox = () => {
   };
 
   const handleVariable = () => {
-    alert("variale set");
-    let getText = document.getElementById("replyVariable").innerHTML;
+    let getText = document.getElementById("replyVariable").innerText;
     setReplyObj((prev) => ({ ...prev, body: getText }));
   };
+
   const handleReply = () => {
     setOpenEditor(true);
   };
@@ -101,15 +102,19 @@ const MailBox = () => {
   const closeAlert = () => {
     setOpenAlert(false);
   };
+
   return (
     <div className="w-full relative">
+      {/* Header Section */}
       <div
         className={`w-full border-b h-[90px] ${borderClr} ${textColor} ${bgColor} flex justify-between items-center`}
       >
+        {/* Profile Information */}
         <div className="px-5 py-5 ">
           <p className="font-bold text-l">Orlando</p>
           <p className="text-sm text-gray-500">orladom@gmail.com</p>
         </div>
+        {/* Action Buttons */}
         <div className="flex w-[50%] justify-evenly items-center">
           <div
             className={`flex justify-center items-center border ${borderClr} ${bgColor} p-2 rounded-lg`}
@@ -129,18 +134,22 @@ const MailBox = () => {
           </div>
         </div>
       </div>
+
+      {/* Editor Section */}
       {openEditor && (
         <div
           className={`text-sm fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-30 z-50`}
         >
+          {/* Editor Popup */}
           <div
             className={`rounded-lg w-[850px] h-[70%] mt-48 ml-10 border ${borderClr} ${
-              theme == "dark" ? "bg-gray-900" : "bg-white"
+              theme === "dark" ? "bg-gray-900" : "bg-white"
             } ${textColor}`}
           >
+            {/* Editor Header */}
             <div
               className={`rounded-t-lg px-5 py-1 flex justify-between ${
-                theme == "dark" ? "bg-gray-600" : "bg-white-600"
+                theme === "dark" ? "bg-gray-600" : "bg-white-600"
               }`}
             >
               <p className={`text-lg font-semibold ${textColor}`}>Reply</p>
@@ -151,7 +160,9 @@ const MailBox = () => {
                 X
               </button>
             </div>
+            {/* Editor Content */}
             <div className={`border px-0 w-full ${borderClr}`}></div>
+            {/* Recipient Information */}
             <p className={`m-1 px-5 py-1 text-gray-500`}>
               To : <span className={`${textColor}`}>jeanne@icloud.com</span>
             </p>
@@ -165,6 +176,7 @@ const MailBox = () => {
               Subject : <span className={`${textColor}`}>Warmup Welcome</span>
             </p>
             <div className={`border px-0 w-full ${borderClr}`}></div>
+            {/* Reply Body */}
             <p className="text-gray-500 px-6 pt-4">Hi jeanne,</p>
             <div
               id="replyVariable"
@@ -172,29 +184,31 @@ const MailBox = () => {
               contentEditable="true"
               className="py-2 px-6 h-1/2 focus:outline-none focus:border-gray-500"
             ></div>
-            <div className="bottom-0 left-0 flex  space-x-2 p-4">
+            {/* Reply Actions */}
+            <div className="bottom-0 left-0 flex space-x-2 p-4">
               <button
                 className="px-4 flex py-2 bg-gradient-to-r from-blue-500 rounded to-blue-800 text-white"
                 onClick={handleSendReply}
               >
-                Send
-                <FaCaretDown className="ml-4 mt-1" />
+                Send <FaCaretDown className="ml-4 mt-1" />
               </button>
               <button
                 onClick={handleVariable}
                 className={`px-4 flex py-2 ${textColor}`}
               >
-                <IoMdFlash className="mt-1 p-0 text-xl" />
-                Variables
+                <IoMdFlash className="mt-1 p-0 text-xl" /> Variables
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Alert */}
       <Alert isOpen={openAlert} onClose={closeAlert} />
 
+      {/* Main Content */}
       {curThreadId == null ? (
+        // Display Placeholder Content
         <>
           <div className="relative mx-5">
             <div
@@ -202,7 +216,7 @@ const MailBox = () => {
             >
               <span
                 className={`px-4 py-1 ${
-                  theme == "dark"
+                  theme === "dark"
                     ? "bg-[#171819] text-[#F8FAFC]"
                     : "bg-[#EEF1F4] text-[#777777]"
                 } z-10`}
@@ -213,14 +227,13 @@ const MailBox = () => {
             <div className={`border absolute top-4 w-full ${borderClr}`}></div>
           </div>
 
+          {/* Placeholder Message */}
           <div
-            className={`w-9/10 h-[286px] border
-      ${
-        theme == "dark"
-          ? "bg-[#141517] border-gray-800 text-[#F8FAFC]"
-          : "bg-[#F9F9F9] text-black"
-      }
-       mt-3 mx-5 p-5 rounded-lg`}
+            className={`w-9/10 h-[286px] border ${
+              theme === "dark"
+                ? "bg-[#141517] border-gray-800 text-[#F8FAFC]"
+                : "bg-[#F9F9F9] text-black"
+            } mt-3 mx-5 p-5 rounded-lg`}
           >
             <div className="flex justify-between">
               <p className="text-xl">New Product Launch</p>
@@ -242,11 +255,12 @@ const MailBox = () => {
               </p>
             </div>
           </div>
+
           <div className="relative mx-5">
             <div className="w-full flex justify-center items-center text-white mt-3 cursor-pointer">
               <span
                 className={`px-4 py-1 ${
-                  theme == "dark"
+                  theme === "dark"
                     ? "bg-[#171819] text-[#F8FAFC]"
                     : "bg-[#EEF1F4] text-[#777777]"
                 } z-10`}
@@ -258,10 +272,11 @@ const MailBox = () => {
           </div>
         </>
       ) : (
+        // Display Thread Content
         <>
-          {curThreadData.map((item) => {
-            return <ListComponent key={item.id} {...item} />;
-          })}
+          {curThreadData.map((item) => (
+            <ListComponent key={item.id} {...item} />
+          ))}
           <div className="p-5 mt-16 relative cursor-pointer">
             <MdReply
               color="white"

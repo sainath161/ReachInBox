@@ -9,7 +9,6 @@ const Inbox = () => {
   const allMailList = useSelector((store) => store.listmail);
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
-  console.log(token);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -26,17 +25,17 @@ const Inbox = () => {
   };
 
   const theme = useSelector((store) => store.theme);
-  const bgColor = theme == "dark" ? "bg-gray-800" : "bg-[#DFE3E8]";
-  const textColor = theme == "dark" ? "text-white" : "text-black";
-  const borderClr = theme == "dark" ? "border-gray-700" : "border-white"
+  const bgColor = theme === "dark" ? "bg-gray-800" : "bg-[#DFE3E8]";
+  const textColor = theme === "dark" ? "text-white" : "text-black";
+  const borderClr = theme === "dark" ? "border-gray-700" : "border-white";
 
   const totalMail = allMailList.length;
+
   return (
     <>
       <div className="pt-10 pb-5 ml-3">
         <h1 className="text-blue-500 text-xl font-bold flex items-center">
-          All Inbox(s)
-          <RiArrowDropDownLine />
+          All Inbox(s) <RiArrowDropDownLine />
         </h1>
         <p className="text-gray-500">
           <span className={`font-bold ${textColor} text-sm mr-1`}>
@@ -45,14 +44,15 @@ const Inbox = () => {
           Inboxes selected
         </p>
       </div>
-      <div className={`relative ml-2 px-1 flex justify-center rounded-md items-center ${borderClr} ${bgColor} border`}>
-      <CiSearch className="top-2 text-2xl m-1  text-gray-400" />
+      <div
+        className={`relative ml-2 px-1 flex justify-center rounded-md items-center ${borderClr} ${bgColor} border`}
+      >
+        <CiSearch className="top-2 text-2xl m-1  text-gray-400" />
         <input
           type="text"
           placeholder="Search"
           className={`${bgColor} p-2 rounded-md w-[95%] focus:outline-none ${textColor}`}
         />
-        
       </div>
       <div className={`${textColor} flex justify-between mt-3 px-2 text-xl`}>
         <div>
@@ -68,15 +68,13 @@ const Inbox = () => {
           <RiArrowDropDownLine />
         </div>
       </div>
-      {allMailList.map((item) => {
-        return (
-          <InboxComponents
-            key={item.id}
-            {...item}
-            handleSingleThread={handleSingleThread}
-          />
-        );
-      })}
+      {allMailList.map((item) => (
+        <InboxComponents
+          key={item.id}
+          {...item}
+          handleSingleThread={handleSingleThread}
+        />
+      ))}
     </>
   );
 };

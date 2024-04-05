@@ -5,21 +5,37 @@ import { deleteThread, getEmailList } from "../Redux/Action";
 const Alert = ({ isOpen, onClose }) => {
   const curThreadId = useSelector((store) => store.curThreadId);
   const token = localStorage.getItem("token");
-  console.log(token);
+  const dispatch = useDispatch();
+
+  // Check if the token is available
+  if (!token) {
+    // Handle case where token is not available
+    console.error("Token is not available.");
+    return null;
+  }
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
 
-  const dispatch = useDispatch();
+  const handleDelete = () => {
+    // Dispatch deleteThread action to delete the thread
+    dispatch(deleteThread(curThreadId, config))
+      .then(() => {
+        // Dispatch getEmailList action to fetch updated email list
+        dispatch(getEmailList(config));
+        onClose(); // Close the alert modal
+      })
+      .catch((error) => {
+        // Handle error if deleteThread or getEmailList fails
+        console.error("Error deleting thread:", error);
+        onClose(); // Close the alert modal even if an error occurs
+      });
+  };
 
   if (!isOpen) return null;
-  const handleDelete = () => {
-    dispatch(deleteThread(curThreadId, config));
-    dispatch(getEmailList(config));
-    onClose();
-  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60">
