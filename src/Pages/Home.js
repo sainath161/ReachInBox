@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import Sidebar from "../Components/SideBar";
 import Header from "../Components/Header";
-import mailImg from "../Assets/mail.png";
-import mailImgWhite from "../Assets/mailWhite.png";
+import mailImg from "../Assets/Mail.svg";
+import mailImgWhite from "../Assets/Mail.svg";
 import { useParams } from "react-router-dom";
 import { getEmailList, resetData, updateToken } from "../Redux/Action";
 import { useDispatch, useSelector } from "react-redux";
