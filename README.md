@@ -30,4 +30,4 @@
 - open it in your choice of ide - VSCode(Recommended)
 - Inside the folder - open terminal
 - run the command - npm i, npm start -> to start the app
-- Open another tab and go to https://reachinboxapp.netlify.app/ -> you will see the website running
+- To see my deploy link click 👉 https://reachinboxapp.netlify.app/ -> you will see the website running
