@@ -29,7 +29,7 @@
   https://www.loom.com/share/67ed295bde534bb89c8a565d2b83e73e
 
 ##To run this file locally
-- clone the repo - git clone https://github.com/UmeshGolani/ReachInBox.git
+- clone the repo - git clone https://github.com/sainath161/ReachInBox
 - open it in your choice of ide - VSCode(Recommended)
 - Inside the folder - open terminal
 - run the command - npm i, npm start -> to start the app

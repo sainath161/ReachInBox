@@ -10,7 +10,6 @@ const Alert = ({ isOpen, onClose }) => {
   // Check if the token is available
   if (!token) {
     // Handle case where token is not available
-    console.error("Token is not available.");
     return null;
   }
 
@@ -30,7 +29,6 @@ const Alert = ({ isOpen, onClose }) => {
       })
       .catch((error) => {
         // Handle error if deleteThread or getEmailList fails
-        console.error("Error deleting thread:", error);
         onClose(); // Close the alert modal even if an error occurs
       });
   };

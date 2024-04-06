@@ -34,7 +34,6 @@ const Home = () => {
         dispatch(updateToken(tokenParam));
         dispatch(getEmailList(config));
       } catch (error) {
-        console.error("Error fetching email data:", error);
         alert("Server error! Unable to fetch email data.");
       }
     };
